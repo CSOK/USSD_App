@@ -49,10 +49,10 @@
                 $registration = new Register();
                 $registration->register($ussdString_explode,$phonenumber, $conn);
                 break;  
-            case 2:  //Update sales
+            case 2:  //About
                 about();  
                 break;
-            case 3:  //Profits and losses
+            case 3:  //Social Links
                 getSocial();				   
                 break; 
             default:
