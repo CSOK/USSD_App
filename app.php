@@ -1,9 +1,14 @@
 <?php 
-    // Try using POST with online NGROK and sandbox
-	$phonenumber = $_GET['MSISDN'];  
-    $sessionID = $_GET['sessionId'];  
-    $servicecode = $_GET['serviceCode'];  
-    $ussdString = $_GET['text'];
+    // // Try using POST with online NGROK and sandbox
+	// $phonenumber = $_GET['MSISDN'];  
+    // $sessionID = $_GET['sessionId'];  
+    // $servicecode = $_GET['serviceCode'];  
+    // $ussdString = $_GET['text'];
+
+    $phonenumber = $_POST['phoneNumber'];
+    $sessionID = $_POST['sessionId'];  
+    $servicecode = $_POST['serviceCode'];  
+    $ussdString = $_POST['text'];
 
     /*
     * Use this format in settings.php file
@@ -18,6 +23,10 @@
     require_once('settings.php');
 
     require_once('Register.php');
+
+    require_once('About.php');
+
+    require_once('Social.php');
 
     // Create connection **MYSQLI
 	$conn = new mysqli($servername, $dbase_username, $password, $dbname);
@@ -50,13 +59,15 @@
                 $registration->register($ussdString_explode,$phonenumber, $conn);
                 break;  
             case 2:  //About
-                about();  
+                $about = new About();
+                $about->about();  
                 break;
             case 3:  //Social Links
-                getSocial();				   
+                $social = new Social();
+                $social->social();				   
                 break; 
             default:
-                $ussd_text = "Ooops! We don't recognize that response!";
+                $ussd_text = "CON  Ooops! We didn't recognize that response!";
                 ussd_proceed($ussd_text);
                 break; 
         }  //End switch
