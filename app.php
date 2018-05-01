@@ -67,14 +67,14 @@
                 $social->social();				   
                 break; 
             default:
-                $ussd_text = "CON  Ooops! We didn't recognize that response!";
+                $ussd_text = "END Ooops! We didn't recognize that response!";
                 ussd_proceed($ussd_text);
                 break; 
         }  //End switch
     }  
 
     function displaymenu(){  
-		$ussd_text="CON \n1: Register\n2: About Us\n3: Get Social";  
+		$ussd_text="CON Computer Society of Kimathi\n1: Register\n2: About Us\n3: Get Social";  
 		ussd_proceed($ussd_text);  
     }
 ?>
