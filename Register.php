@@ -32,18 +32,33 @@
                 $email=$details[2];  
                 $gender=$details[3];
                 $course = $details[4];
-                $reg_number=$details[5];   
-                
+                $reg_number=$details[5];  
 
-            
                 // Write into database all the details
                 $sql = "INSERT INTO member (full_name, email, gender, phone_number, course, reg_number) 
                         VALUES ('$full_name', '$email', '$gender', '$phone', '$course', '$reg_number')";
                 if($conne->query($sql) == TRUE){
-                    $message = "Thank you.";
-                    $sms_message = "Dear , \nWe are excited to have you on the App!\nAccess our service through *384*567# for delightful services.\nHappy sales! Leja Team.";
+                    $message = "End \nHurray! All your details have been recorded. Proceed to checkout and verify your membership";
                     
-                    echo "END ".$message;
+                    $sms_message = "Cheers $full_name! Your first step to joining us is complete!\nBy joining us, you are granted full access to our Hackathons, Meet-ups, Tech Talks, Trainings and Social Activities.\nHowever, our membership cost 200/= only, payable via M-PESA send money to our secretary - .";
+                    ussd_proceed($message);
+
+                    // And send client the message
+                    require_once('resources/AfricasTalkingGateway.php');
+
+                    $recipients = $phone; 
+
+                    $message    = $sms_message;
+
+                    $gateway    = new AfricasTalkingGateway($username, $apikey);
+                    try 
+                    { 
+                        $results = $gateway->sendMessage($recipients, $message);
+                    }
+                    catch ( AfricasTalkingGatewayException $e )
+                    {
+                        // echo "Encountered an error while sending: ".$e->getMessage();
+                    }
                 }
                 else{
                     // echo "error: ".$sql ."\n" .$conne->error;
