@@ -49,29 +49,69 @@
     	echo $ussd_text;  
     }
 
-    if ($level==0){
-        displaymenu();
-    }     
-    if ($level>0){  
-        switch ($ussdString_explode[0]) {  
-            case 1: //Register
-                $registration = new Register();
-                $registration->register($ussdString_explode,$phonenumber, $conn);
-                break;  
-            case 2:  //About
-                $about = new About();
-                $about->about();  
-                break;
-            case 3:  //Social Links
-                $social = new Social();
-                $social->social();				   
-                break; 
-            default:
-                $ussd_text = "END Ooops! We didn't recognize that response!";
-                ussd_proceed($ussd_text);
-                break; 
-        }  //End switch
-    }  
+    	
+	//If user exists or not
+    $query = "SELECT * from member where phone_number ='$phonenumber'";
+
+	if ($result=mysqli_query($conn,$query)){
+		$row = $result->fetch_assoc();
+		if(mysqli_num_rows($result) > 0){
+
+           if ($level==0){  
+            $ussd_text="CON \nWelcome back.\n1. Renew\n2. About\n3. Social";  
+               ussd_proceed($ussd_text);    
+            } 
+            
+            //First selection either registration or about
+            if ($level>0){  
+                switch ($ussdString_explode[0])  
+                    {  
+                    case 1: 			
+                        $ussd_text = "END You are already a member";
+                        ussd_proceed($ussd_text);
+                        break;   
+                    case 2:  //About
+                        $about = new About();
+                        $about->about();  
+                        break;
+                    case 3:  //Social Links
+                        $social = new Social();
+                        $social->social();				   
+                        break; 
+                    default:				
+                        $ussd_text = "END Ooops! We didn't recognize that response!";
+                        ussd_proceed($ussd_text);
+                        break; 
+                }//End switch  
+            }  	
+        }
+    }
+    else{
+        //Registration 
+        if ($level==0){
+            displaymenu();
+        }     
+        if ($level>0){  
+            switch ($ussdString_explode[0]) {  
+                case 1: //Register
+                    $registration = new Register();
+                    $registration->register($ussdString_explode,$phonenumber, $conn);
+                    break;  
+                case 2:  //About
+                    $about = new About();
+                    $about->about();  
+                    break;
+                case 3:  //Social Links
+                    $social = new Social();
+                    $social->social();				   
+                    break; 
+                default:
+                    $ussd_text = "END Ooops! We didn't recognize that response!";
+                    ussd_proceed($ussd_text);
+                    break; 
+            }  //End switch
+        }             
+    }
 
     function displaymenu(){  
 		$ussd_text="CON Computer Society of Kimathi\n1: Register\n2: About Us\n3: Get Social";  
